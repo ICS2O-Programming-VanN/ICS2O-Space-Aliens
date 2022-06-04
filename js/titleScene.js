@@ -1,3 +1,13 @@
+/* Global Phaser */
+
+// Copyright (c) 2022 Van Nguyen All rights reserved
+//
+// Created by Mr. Coxall
+// Modified by Van Nguyen
+// Created on June 1 2022
+
+// Phaser Game Title Scene
+
 // Adds to Phaser.Scene
 class titleScene extends Phaser.Scene {
   constructor() {

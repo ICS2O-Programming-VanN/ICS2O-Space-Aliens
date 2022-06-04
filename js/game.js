@@ -1,4 +1,12 @@
-/* global Phaser */
+/* Global Phaser */
+
+// Copyright (c) 2022 Van Nguyen All rights reserved
+//
+// Created by Mr. Coxall
+// Modified by Van Nguyen
+// Created on June 1 2022
+
+// Phaser Configuration File
 
 // Connects to splashScene.js
 import SplashScene from "./splashScene.js";

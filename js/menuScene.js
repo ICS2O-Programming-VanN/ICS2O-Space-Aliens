@@ -1,4 +1,12 @@
-/* Global Phaer */
+/* Global Phaser */
+
+// Copyright (c) 2022 Van Nguyen All rights reserved
+//
+// Created by Mr. Coxall
+// Modified by Van Nguyen
+// Created on June 1 2022
+
+// Phaser Game Menu Scene
 
 // Adds code to Phaser.Scene
 class menuScene extends Phaser.Scene {
