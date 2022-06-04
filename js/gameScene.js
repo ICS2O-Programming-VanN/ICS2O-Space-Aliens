@@ -1,134 +1,133 @@
-//code written below extends (adds to) prewritten code in Phaser.Scene
+// Adds code to Phaser.Scene
 class gameScene extends Phaser.Scene {
   constructor() {
-    //"super" accesses the properties of Phaser first
+    // Runs Phaser
     super({key: 'gameScene'});
 
-    //initializing the background variable
+    // Initializes the background variable
     this.gameSceneBackground = null;
 
-    //initializing the laser sprite variable
+    // Initializes the laser sprite variable
     this.blasterSprite = null;
 
-    //creating a boolean variable which will later make sure that only one bolt can be fired each time the space bar is pressed
-    this.fireBolt = false;
+    // Only allows one laser to be fired at once
+    this.firelaser = false;
   }
 
   init(data) {
-    //initializing background colour
+    // Initializing background colour
     this.cameras.main.setBackgroundColor("#BCDADE");
   }
 
   preload() {
-    //for debugging purposes: writes Splash Scene in the console to let programmer know what scene/file is being displayed
+    // Displays what scene is running in console
     console.log("Game Scene");
 
-    //loading the background image
+    // Loads background image
     this.load.image('labBackground', './images/gameSceneBackground.jpg');
 
-    //loading the laser sprite image
+    // Loads Blaster Sprite
     this.load.image('blasterSprite', './images/blasterSprite.png');
 
-    //loading the image for the "bolt"/missile fired from the from the laser
+    // Loads Laser Beam Sprite
     this.load.image('laserSprite', './images/laserBeam.png');
 
-    //loading the sound file for when a bolt is fired
+    // Loads sound for when the laser beam is fired
     this.load.audio('laserSound', './sounds/laserFiredSound.wav');
   }
 
   create(data) {
-    //creating the background to display to the screen
+    // Creates background for Game Scene
     this.gameSceneBackground = this.add.image(0, 0, 'labBackground');
-    //positioning the background image to take up the screen
+    // Positions background image to take up screen
     this.gameSceneBackground.setOrigin(0, 0);
 
-    //creating the laser sprite on the screen
+    // Displays Laser Sprite
     this.blasterSprite = this.physics.add.sprite(100, 1080 / 2, 'blasterSprite').setScale(0.25);
 
-    //creating a "group" for all the bolts/missiles to have the same properties
+    // Groups lasers together to have identical properties
     this.laserGroup = this.physics.add.group();
   }
 
   update(time, delta) {
-    //update is called 60 times per second
     
-    //variable looks for input from the keyboard to move the laser sprite left
+    // Checks if the user is pressing/moving left
     const keyLeftPressed = this.input.keyboard.addKey('LEFT');
-    //if statement checks if left key is pressed and moves the sprite accordingly
+    
+    // IF statement checks if left key is pressed and moves the sprite accordingly
     if (keyLeftPressed.isDown === true) {
-      //moves the laser sprite left on the x-axis
+      // Moved lasers left (x-axis)
       this.blasterSprite.x -= 5;
-      //stopping the sprite from moving off the screen
+      // Prevents Blaster from going off screen
       if (this.blasterSprite.x < 0) {
         this.blasterSprite.x = 0;
       }
     }
 
-    //same process used to look for input from the keyboard from the right key
+    // Checks if user is pressing/moving right
     const keyRightPressed = this.input.keyboard.addKey('RIGHT');
-    //if statement checks if above variable = true (right key is pressed) and moves laser sprite to the right on the x-axis
+    // IF user is pressing/moving right
     if (keyRightPressed.isDown === true) {
-      //moves the laser sprite right on the x-axis
+      // Moves Blaster Sprite Right (x-axis)
       this.blasterSprite.x += 5;
-      //stopping the sprite from moving off the screen
+      // Prevents Blaster from moving off screen
       if (this.blasterSprite.x > 1920) {
         this.blasterSprite.x = 1920;
       }
     }
 
-    //same process used to look for input from the keyboard from the up key
+    // Checks if user is pressing/moving up
     const keyUpPressed = this.input.keyboard.addKey('UP');
-    //if statement checks if above variable = true (up key is pressed) and moves laser up on the y-axis
+    // IF user is pressing/moving up
     if (keyUpPressed.isDown === true) {
-      //moves the laser sprite up on the y-axis
+      // Moves Blaster Sprite Up (y-axis)
       this.blasterSprite.y -= 5;
-      //stopping the sprite from moving off the screen
+      // Prevents Sprite from going off Screen
       if (this.blasterSprite.y < 0) {
         this.blasterSprite.y = 0;
       }
     }
 
-    //same process used to look for input from the keyboard from the down key
+    // Checks if user is pressing/moving down
     const keyDownPressed = this.input.keyboard.addKey('DOWN');
-    //if statement checks if above variable = true (down key is pressed) and moves laser down on the x-axis
+    // IF user is pressing/moving down
     if (keyDownPressed.isDown === true) {
-      //moves laser sprite down on the y-axis
+      // Moves Blaster down (y-axis)
       this.blasterSprite.y += 5;
-      //stopping the sprite from moving off the screen
+      // Prevents Blaster from going off screen
       if (this.blasterSprite.y > 1080) {
         this.blasterSprite.y = 1080;
       }
     }
 
-    //variable checks for space bar pressed, to fire a "bolt"/missile
+    // Checks if user is pressing the spacebar
     const keySpacePressed = this.input.keyboard.addKey('SPACE');
-    //if statement checks if space bar is pressed and fires bolt/missile
+    // IF space bar is pressed
     if (keySpacePressed.isDown === true) {
-      //checking if a bolt has already lasern fired while the space bar was pressed
+      // Checks if a laser has already been fired while pressing spacebar
       if (this.laserSprite === false) {
-        //using a variable to add a bolt/missile each time boolean expression is true
+        // Adds new laser
         const addNewLaser = this.physics.add.sprite(this.laserSprite.x, this.laserSprite.y, 'laserSprite').setScale(0.1);
-        //adding the new bolt to the group of bolts in the "create" section
+        // Adds laser to group of lasers
         this.laserGroup.add(addNewLaser);
-        //adding a sound effect (loaded in the preload section) each time a missile is fired
+        // Plays Sound effect when laser fired
         this.sound.play('laserSound');
-        //changing the fireBolt variable to true, indicating that a missile has lasern fired
+        // Makes laser being fired true
         this.laserSprite = true;
       }
     }
 
-    //using another if statement to check if space key is up, so that bolts can be fired multiple times during the game, once for each time the space bar is pressed
+    // IF the spacebar is not being pressed, the user can fired several lasers
     if (keySpacePressed.isUp === true) {
-      //resetting the fireBolt variable to false so that a bolt can be fired again the next time the space bar is pressed
+      // Sets the laserSprite variable to false so that the laser can be fired again
       this.laserSprite = false;
     }
 
-    //applying a function to all children (individual bolts) in the group boltGroup
+    // Function to all lasers
     this.laserGroup.children.each(function (item) {
-      //item represents each individual bolt in the group
-      //changing the x-value of the bolt on the screen, making it appear to shoot towards the right side of the screen
+      // Makes it so each laser moves towards the right
       item.x = item.x + 15;
-      //destroying the bolts after they go off the screen so that they do not take up too much memory on the computer
+      // Destroys laser when they reach the end of the screen
       if (item.x > 1920) {
         item.destroy();
       }
