@@ -1,37 +1,38 @@
-//code written below extends (adds to) prewritten code in Phaser.Scene
+// Adds code to Phaser.Scene
 class splashScene extends Phaser.Scene {
   constructor() {
-    //"super" runs Phaser.Scene first
+    // Runs Phaser.Scene
     super({key: 'splashScene'});
-    //initializing splashSceneBackgroundImage variable
+    // Initializes splashSceneBackgroundImage Variable
     this.splashSceneBackgroundImage = null;
   }
 
   init(data) {
-    //initializing background colour
+    // Initializes background colour
     this.cameras.main.setBackgroundColor("#FFFFFF");
   }
 
   preload() {
-    //for debugging purposes: writes Splash Scene in the console to let programmer know the scene/file is being properly displayed
+    // Displays the Scene being played (in console)
     console.log("Splash Scene");
-    //giving Phaser access to an image for the splash scene
-    //Note: "this" refers to the scene in question (the current scene) and 'splashSceneImage' is the key
+    
+    // Loads Splash Screen Image for Phaser
     this.load.image('splashScreenImage', './images/splashScreenImage.jpg');
   }
 
   create(data) {
-    //displaying the image (using a variable) loaded in the preload() section
+    // Displays image loaded in preload()
     this.splashSceneBackgroundImage = this.add.sprite(0, 0, 'splashScreenImage');
-    //centring the background image
+    
+    // Centeres background image
     this.splashSceneBackgroundImage.x = 1920 / 2;
     this.splashSceneBackgroundImage.y = 1080 / 2;
   }
 
   update(time, delta) {
-    //changing the amount of time during which this scene is shown
+    // Determines the amount of time the Splash Screen is shown
     if (time > 3000) {
-      //changing scene to title scene
+      // Changes Scene to Title Scene
       this.scene.switch('titleScene');
     }
   }

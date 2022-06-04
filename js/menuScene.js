@@ -1,54 +1,55 @@
 /* Global Phaer */
 
-//code written below extends (adds to) prewritten code in Phaser.Scene
+// Adds code to Phaser.Scene
 class menuScene extends Phaser.Scene {
   constructor() {
-    //"super" runs Phaser.Scene first
+    // Runs Phaser.Scene
     super({key: 'menuScene'});
 
-    //initializing a variable for the background image
+    // Initializes Variable for the background image
     this.menuSceneBackgroundImage = null;
 
-    //initializing a variable for the button
+    // Initializes Variable for Button
     this.startButton = null;
   }
 
   init(data) {
-    //initializing background colour
+    // Initializes background colour
     this.cameras.main.setBackgroundColor("#FFFFFF");
   }
 
   preload() {
-    //for debugging purposes: writes Splash Scene in the console to let programmer know what scene/file is being displayed
+
+    // Shows what scene is being played (in console)
     console.log("Menu Scene");
 
-    //loading background image
+    // Loads background image
     this.load.image('menuSceneBackground', './images/menuSceneBackground.jpg');
 
-    //loading image for button
+    // Loads image for button
     this.load.image('start', './images/startButton.png');
   }
 
   create(data) {
-    //creating background image
+    // Creates background image
     this.menuSceneBackgroundImage = this.add.sprite(0, 0, 'menuSceneBackground');
-    //centring background image on screen
+    // Centers background image
     this.menuSceneBackgroundImage.x = 1920 / 2;
     this.menuSceneBackgroundImage.y = 1080 / 2;
 
-    //creating image for starting button
+    // Creates image for starting button
     this.startButton = this.add.sprite(1920 / 5, (1080 / 2) + 300, 'start').setScale(0.8);
-    //making button interactive (responsive to user click)
+    // Allows user to click button
     this.startButton.setInteractive({useHandCursor: true });
     //when button clicked, call a function
     this.startButton.on('pointerdown', () => this.buttonClicked());
   }
 
   update(time, delta) {
-    //return to later
+    // TBD
   }
 
-  //function for when start button is clicked
+  // Function when start button is clicked
   buttonClicked() {
     this.scene.start('gameScene');
   }
