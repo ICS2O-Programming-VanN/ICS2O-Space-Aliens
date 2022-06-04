@@ -1,38 +1,52 @@
-// Global Phaser
+/* global Phaser */
 
-// Scene Import Statements
-import SplashScene from "./splashScene.js"
+//link to splashScene.js
+import SplashScene from "./splashScene.js";
+//link to titleScene.js
+import TitleScene from "./titleScene.js";
+//link to menuScene.js
+import MenuScene from "./menuScene.js";
+//link to gameScene.js
+import GameScene from "./gameScene.js";
 
-// Creates the New Scenes
-const splashScene = new SplashScene()
+//creating constants to 'hold' the scene files
+const splashScene = new SplashScene();
+const titleScene = new TitleScene();
+const menuScene = new MenuScene();
+const gameScene = new GameScene();
 
-// Game Scene
+//using a constant to set up the basic Phaser game
 const config = {
+  //type of game
   type: Phaser.AUTO,
+  //dimensions of screen
   width: 1920,
   height: 1080,
+  //setup so default arcade games can be played
   physics: {
-    // Allows arcade games to function
-    default: "arcade",
+    default: 'arcade',
     arcade: {
-      // Allows visual of bounding boxes
       debug: true
-    }
+    },
   },
-  // Sets background Color
-  backgroundColor: 0x5f6e7a,
+  //settings for background
+  backgroundColor: 0xFFFFFF,
+  //making scale of background change when screen/window size changes
   scale: {
     mode: Phaser.Scale.FIT,
-    // Centers game to middle of page
+    //centring the background on the page
     autoCenter: Phaser.Scale.CENTER_BOTH
   },
 }
 
-const game = new Phaser.Game(config)
-// console.log(game)
+const game = new Phaser.Game(config);
+console.log(game);
 
-// Load Scenes
-game.scene.add("splashScene", splashScene)
+//loading scenes
+game.scene.add('splashScene', splashScene);
+game.scene.add('titleScene', titleScene);
+game.scene.add('menuScene', menuScene);
+game.scene.add('gameScene', gameScene);
 
-// Start Scene
-game.scene.start("splashScene")
+//starting scene
+game.scene.start('splashScene');
