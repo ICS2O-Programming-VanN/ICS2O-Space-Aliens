@@ -34,14 +34,14 @@ class splashScene extends Phaser.Scene {
     // Displays image loaded in preload()
     this.splashSceneBackgroundImage = this.add.sprite(0, 0, 'splashScreenImage');
     
-    // Centeres background image
+    // Centers background image
     this.splashSceneBackgroundImage.x = 1920 / 2;
     this.splashSceneBackgroundImage.y = 1080 / 2;
   }
 
   update(time, delta) {
     // Determines the amount of time the Splash Screen is shown
-    if (time > 3000) {
+    if (time > 4500) {
       // Changes Scene to Title Scene
       this.scene.switch('titleScene');
     }
