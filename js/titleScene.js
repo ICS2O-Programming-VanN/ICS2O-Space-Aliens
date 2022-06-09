@@ -45,7 +45,7 @@ class titleScene extends Phaser.Scene {
     this.titleSceneBackgroundImage.y = 1080 / 2;
 
     // Creates Title for Title Scene
-    this.titleSceneText = this.add.text(1920 / 2, (1080 / 2) + 375, 'Blast the Evil Robot!',       this.titleSceneTextStyle).setOrigin(0.5);
+    this.titleSceneText = this.add.text(1920 / 2, (1080 / 2) + 375, 'Blast the Evil Robot!', this.titleSceneTextStyle).setOrigin(0.5);
   }
 
   update(time, delta) {

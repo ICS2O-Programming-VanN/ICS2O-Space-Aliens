@@ -19,6 +19,12 @@ class menuScene extends Phaser.Scene {
 
     // Initializes Variable for Button
     this.startButton = null;
+
+    // Initializes Menu Scene text variable
+    this.menuSceneInstructions = null;
+
+    // Initializing a variable to style the text on the Menu Scene
+    this.menuSceneInstructionsStyle = {font: '175px Times', fill: '#00ff99', align: 'center'};
   }
 
   init(data) {
@@ -41,6 +47,7 @@ class menuScene extends Phaser.Scene {
   create(data) {
     // Creates background image
     this.menuSceneBackgroundImage = this.add.sprite(0, 0, 'menuSceneBackground');
+    
     // Centers background image
     this.menuSceneBackgroundImage.x = 1920 / 2;
     this.menuSceneBackgroundImage.y = 1080 / 2;
@@ -49,8 +56,12 @@ class menuScene extends Phaser.Scene {
     this.startButton = this.add.sprite(1920 / 5, (1080 / 2) + 300, 'start').setScale(0.8);
     // Allows user to click button
     this.startButton.setInteractive({useHandCursor: true });
-    //when button clicked, call a function
+    
+    // When the button clicked, call a function
     this.startButton.on('pointerdown', () => this.buttonClicked());
+
+    // Creates Intructions on how to play for Menu Scene
+    this.menuSceneInstructions = this.add.text(1920 / 2, (10 / 2) + 100, 'Arrow Keys to Move!\nSpacebar to shoot lasers!', this.menuSceneInstructionsStyle).setOrigin(0.50).setScale(0.40);
   }
 
   update(time, delta) {

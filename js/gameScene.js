@@ -46,12 +46,12 @@ class gameScene extends Phaser.Scene {
 
   create(data) {
     // Creates background for Game Scene
-    this.gameSceneBackground = this.add.image(0, 0, 'labBackground');
+    this.gameSceneBackground = this.add.image(0, 0, 'labBackground').setScale(1.35);
     // Positions background image to take up screen
     this.gameSceneBackground.setOrigin(0, 0);
-
+    
     // Displays Laser Sprite
-    this.blasterSprite = this.physics.add.sprite(100, 1080 / 2, 'blasterSprite').setScale(0.25);
+    this.blasterSprite = this.physics.add.sprite(100, 1080 / 2, 'blasterSprite').setScale(0.50);
 
     // Groups lasers together to have identical properties
     this.laserGroup = this.physics.add.group();
@@ -68,7 +68,7 @@ class gameScene extends Phaser.Scene {
       this.blasterSprite.x -= 5;
       // Prevents Blaster from going off screen
       if (this.blasterSprite.x < 0) {
-        this.blasterSprite.x = 0;
+        this.blasterSprite.x = 1920;
       }
     }
 
@@ -80,7 +80,7 @@ class gameScene extends Phaser.Scene {
       this.blasterSprite.x += 5;
       // Prevents Blaster from moving off screen
       if (this.blasterSprite.x > 1920) {
-        this.blasterSprite.x = 1920;
+        this.blasterSprite.x = 0;
       }
     }
 
@@ -92,7 +92,7 @@ class gameScene extends Phaser.Scene {
       this.blasterSprite.y -= 5;
       // Prevents Sprite from going off Screen
       if (this.blasterSprite.y < 0) {
-        this.blasterSprite.y = 0;
+        this.blasterSprite.y = 1080;
       }
     }
 
@@ -104,7 +104,7 @@ class gameScene extends Phaser.Scene {
       this.blasterSprite.y += 5;
       // Prevents Blaster from going off screen
       if (this.blasterSprite.y > 1080) {
-        this.blasterSprite.y = 1080;
+        this.blasterSprite.y = 0;
       }
     }
 
@@ -115,7 +115,7 @@ class gameScene extends Phaser.Scene {
       // Checks if a laser has already been fired while pressing spacebar
       if (this.laserSprite === false) {
         // Adds new laser
-        const addNewLaser = this.physics.add.sprite(this.laserSprite.x, this.laserSprite.y, 'laserSprite').setScale(0.1);
+        const addNewLaser = this.physics.add.sprite(this.blasterSprite.x, this.blasterSprite.y, 'laserSprite').setScale(0.1);
         // Adds laser to group of lasers
         this.laserGroup.add(addNewLaser);
         // Plays Sound effect when laser fired
