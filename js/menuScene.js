@@ -10,6 +10,8 @@
 
 // Adds code to Phaser.Scene
 class menuScene extends Phaser.Scene {
+  
+  
   constructor() {
     // Runs Phaser.Scene
     super({key: 'menuScene'});
@@ -19,6 +21,8 @@ class menuScene extends Phaser.Scene {
 
     // Initializes Variable for Button
     this.startButton = null;
+    
+    this.gameSceneChange = false
 
     // Initializes Menu Scene text variable
     this.menuSceneInstructions = null;
@@ -42,6 +46,9 @@ class menuScene extends Phaser.Scene {
 
     // Loads image for button
     this.load.image('start', './images/startButton.png');
+
+    // Loads image for button when clicked
+    this.load.image('startButtonClicked', './images/startButtonClicked.png');
   }
 
   create(data) {
@@ -59,19 +66,29 @@ class menuScene extends Phaser.Scene {
     
     // When the button clicked, call a function
     this.startButton.on('pointerdown', () => this.buttonClicked());
-
-    // Creates Intructions on how to play for Menu Scene
+    
+    // Creates Instructions on how to play for Menu Scene
     this.menuSceneInstructions = this.add.text(1920 / 2, (10 / 2) + 100, 'Arrow Keys to Move!\nSpacebar to shoot lasers!', this.menuSceneInstructionsStyle).setOrigin(0.50).setScale(0.40);
   }
+  
+  buttonClicked() {
+    this.startButton.setTexture('startButtonClicked')
+    this.gameSceneChange = true
+  }
+
 
   update(time, delta) {
-    // TBD
-  }
-
-  // Function when start button is clicked
-  buttonClicked() {
-    this.scene.start('gameScene');
+    if (this.gameSceneChange == true) {
+      time = 0
+      if (time > 100) {
+        this.scene.start('gameScene');
+      }
+    }
+   
   }
 }
+
+  // Function when start button is clicked
+
 
 export default menuScene

@@ -8,6 +8,30 @@
 
 // Adds code to Phaser.Scene
 class gameScene extends Phaser.Scene {
+
+    //function definition for creating a pesticide enemy (using a function because it will be referenced multiple times throughout the code)
+  createPesticide() {
+    //creating a variable to make enemies appear at a random y location between 1 and 1080 px
+    const pesticideYLocation = Math.floor(Math.random() * 1080) + 1;
+    
+    //using a variable and Math.random() to make the pesticides move slightly up or down and be less predictable
+    let pesticideYVelocity = Math.floor(Math.random() * 50) + 1;
+    //multiplying the pesticideYVelocity by a negative or positive 1 to make pesticides move slightly up or down
+    pesticideYVelocity *= Math.round(Math.random()) ? 1 : -1;
+    
+    //creating a variable that makes an enemy appear each time this function is called
+    const aPesticide = this.physics.add.sprite(1920, pesticideYLocation, 'pesticide').setScale(0.4);
+    
+    //adding an x velocity to the pesticide created using physics to make the enemy move to the right of the screen (towards the bee sprite)
+    aPesticide.body.velocity.x = -200;
+    //adding the y velocity using the variable defined above
+    aPesticide.body.velocity.y = pesticideYVelocity;
+    
+    //adding the new sprite enemy created to the pesticide group
+    this.pesticideGroup.add(aPesticide);
+  }
+
+  
   constructor() {
     // Runs Phaser
     super({key: 'gameScene'});
@@ -20,6 +44,26 @@ class gameScene extends Phaser.Scene {
 
     // Only allows one laser to be fired at once
     this.firelaser = false;
+
+     //initializing variables for the score and the text displaying the score
+    this.score = 0;
+    this.scoreText = null;
+    //using a variable to select a font for the score
+    this.scoreTextStyle = { font: '65px Arial', fill: '#ffffff', align: 'center' };
+
+    //initializing a variable for the game over text
+    this.gameOverText = null;
+    //styling the game over text
+    this.gameOverTextStyle = { font: '65px Arial', fill: '#ff0000', align: 'center' };
+
+    //initializing variables for health points and the text displaying the health points
+    this.healthPoints = 3;
+    this.healthPointsText = null;
+    //using a variable to select a font for the health points
+    this.healthPointsTextStyle = { font: '65px Arial', fill: '#ffffff', align: 'center' };
+
+    //initializing a variable for the user's high score
+    this.highScore = localStorage.getItem('Highscore');
   }
 
   init(data) {
