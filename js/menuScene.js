@@ -73,7 +73,7 @@ class menuScene extends Phaser.Scene {
   
   buttonClicked() {
     this.startButton.setTexture('startButtonClicked')
-    this.gameSceneChange = true
+    this.scene.start('gameScene');
   }
 
 

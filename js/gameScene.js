@@ -9,26 +9,26 @@
 // Adds code to Phaser.Scene
 class gameScene extends Phaser.Scene {
 
-    //function definition for creating a pesticide enemy (using a function because it will be referenced multiple times throughout the code)
-  createPesticide() {
-    //creating a variable to make enemies appear at a random y location between 1 and 1080 px
-    const pesticideYLocation = Math.floor(Math.random() * 1080) + 1;
+    // Function that creates a Robot
+  createRobot() {
+    // Makes robot appear at a random Y location
+    const robotYLocation = Math.floor(Math.random() * 1080) + 1;
     
-    //using a variable and Math.random() to make the pesticides move slightly up or down and be less predictable
-    let pesticideYVelocity = Math.floor(Math.random() * 50) + 1;
-    //multiplying the pesticideYVelocity by a negative or positive 1 to make pesticides move slightly up or down
-    pesticideYVelocity *= Math.round(Math.random()) ? 1 : -1;
+    // Uses Math.random to make robots move slightly to the side
+    let robotYVelocity = Math.floor(Math.random() * 50) + 1;
+    // Makes Robot move up or down
+    robotYVelocity *= Math.round(Math.random()) ? 1 : -1;
     
-    //creating a variable that makes an enemy appear each time this function is called
-    const aPesticide = this.physics.add.sprite(1920, pesticideYLocation, 'pesticide').setScale(0.4);
+    // Robot appears every time function is called
+    const aRobot = this.physics.add.sprite(1920, robotYLocation, 'robot').setScale(0.4);
     
-    //adding an x velocity to the pesticide created using physics to make the enemy move to the right of the screen (towards the bee sprite)
-    aPesticide.body.velocity.x = -200;
-    //adding the y velocity using the variable defined above
-    aPesticide.body.velocity.y = pesticideYVelocity;
+    // Adds velocity to robot making them move to the left
+    aRobot.body.velocity.x = -200;
+    // Adds Y velocity
+    aRobot.body.velocity.y = robotYVelocity;
     
-    //adding the new sprite enemy created to the pesticide group
-    this.pesticideGroup.add(aPesticide);
+    // Adds Robot to robot grouping
+    this.robotGroup.add(aRobot);
   }
 
   
@@ -45,27 +45,33 @@ class gameScene extends Phaser.Scene {
     // Only allows one laser to be fired at once
     this.firelaser = false;
 
-     //initializing variables for the score and the text displaying the score
+    // Initializes Score variable
     this.score = 0;
+    // Initializes Score text variable
     this.scoreText = null;
-    //using a variable to select a font for the score
-    this.scoreTextStyle = { font: '65px Arial', fill: '#ffffff', align: 'center' };
+    // Score text Style
+    this.scoreTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' };
 
-    //initializing a variable for the game over text
+    // Initializes Game Over Text variable 
     this.gameOverText = null;
-    //styling the game over text
-    this.gameOverTextStyle = { font: '65px Arial', fill: '#ff0000', align: 'center' };
+    // Game over text style
+    this.gameOverTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' };
 
-    //initializing variables for health points and the text displaying the health points
+    // Initializes Health Points variable
     this.healthPoints = 3;
+    // Initializes Health Points text variable
     this.healthPointsText = null;
-    //using a variable to select a font for the health points
-    this.healthPointsTextStyle = { font: '65px Arial', fill: '#ffffff', align: 'center' };
+    // Health Points Text Style
+    this.healthPointsTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' };
 
-    //initializing a variable for the user's high score
-    this.highScore = localStorage.getItem('Highscore');
+    // Game Win text variable
+    this.gameWinText = null
+    // Game Win text variable Style
+    this.gameWinTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' }
   }
 
+
+  
   init(data) {
     // Initializing background colour
     this.cameras.main.setBackgroundColor("#BCDADE");
@@ -83,9 +89,18 @@ class gameScene extends Phaser.Scene {
 
     // Loads Laser Beam Sprite
     this.load.image('laserSprite', './images/laserBeam.png');
+    
+    // Loads Robot Sprite
+    this.load.image('robot', './images/robot.png');
 
     // Loads sound for when the laser beam is fired
     this.load.audio('laserSound', './sounds/laserFiredSound.wav');
+
+    // Loads sound for when the Laser hits the robot
+    this.load.audio('explosion', './sounds/laserToRobotExplosion.mp3');
+
+    // Loads sound for when the robot hits the blaster
+    this.load.audio('enemyCollison', './sounds/enemyCollison.mp3');
   }
 
   create(data) {
@@ -93,12 +108,74 @@ class gameScene extends Phaser.Scene {
     this.gameSceneBackground = this.add.image(0, 0, 'labBackground').setScale(1.35);
     // Positions background image to take up screen
     this.gameSceneBackground.setOrigin(0, 0);
+
+    // Displays Score text to screen
+    this.scoreText = this.add.text(10, 10, 'Robots Destroyed: ' + this.score.toString(), this.scoreTextStyle);
+
+    // Displays health points to screen
+    this.healthPointsText = this.add.text(650, 10, 'Health Points: ' + this.healthPoints.toString(), this.healthPointsTextStyle);
     
     // Displays Laser Sprite
     this.blasterSprite = this.physics.add.sprite(100, 1080 / 2, 'blasterSprite').setScale(0.50);
 
     // Groups lasers together to have identical properties
     this.laserGroup = this.physics.add.group();
+
+    // Creates group for all Robots
+    this.robotGroup = this.add.group();
+    // Creates two robots to start off
+    this.createRobot();
+    this.createRobot();
+
+    // When the laser hits the robots
+    this.physics.add.collider(this.laserGroup, this.robotGroup, function (laserCollide, robotCollide) {
+      // Destroys the Robot
+      robotCollide.destroy();
+      
+      // Destroys the laser
+      laserCollide.destroy();
+
+      // Adds a point to the scoreboard
+      this.score += 1
+      this.scoreText.setText("Robots Destroyed: " + this.score.toString())
+
+      // Plays explosion sound upon contact
+      this.sound.play('explosion');
+      
+      // Creates two robots for every time one is destroyed
+      this.createRobot();
+      this.createRobot();
+
+      // If the user gains 25 points / wins
+      if (this.score >= 25) {
+        // Stops physics to create more robots
+        this.physics.pause()
+
+        // Displays Game win Text
+        this.gameWinText = this.add.text(1920 / 2, 1080 / 2, 'You won!\nClick to play again.', this.gameWinTextStyle).setOrigin(0.5)
+        // Allows the user to play again by clicking
+        this.gameWinText.setInteractive({ useHandCursor: true })
+        this.gameWinText.on('pointerdown', () => this.scene.start('gameScene'), this.score = 0)
+      }
+      
+      // Binds code the class "this"
+    }.bind(this));
+
+    // Physics when the robots collide with the blaster
+    this.physics.add.collider(this.blasterSprite, this.robotGroup, function (blasterSpriteCollide, robotCollide) {
+      // Stops Physics from creating more robots
+      this.physics.pause()
+      // Destroys the Robot
+      robotCollide.destroy()
+      // Destroys the Blaster
+      blasterSpriteCollide.destroy()
+      // Displays Game Over text and allows user to play the game again by clicking
+      this.gameOverText = this.add.text(1920 / 2, 1080 / 2, "Game Over! \nClick to play again", this.gameOverTextStyle).setOrigin(0.5)
+      this.gameOverText.setInteractive({ useHandCursor: true})
+      this.gameOverText.on("pointerdown", () => this.scene.start("gameScene"))
+      this.score = 0
+    }.bind(this))
+
   }
 
   update(time, delta) {
@@ -109,7 +186,7 @@ class gameScene extends Phaser.Scene {
     // IF statement checks if left key is pressed and moves the sprite accordingly
     if (keyLeftPressed.isDown === true) {
       // Moved lasers left (x-axis)
-      this.blasterSprite.x -= 5;
+      this.blasterSprite.x -= 10;
       // Prevents Blaster from going off screen
       if (this.blasterSprite.x < 0) {
         this.blasterSprite.x = 1920;
@@ -121,7 +198,7 @@ class gameScene extends Phaser.Scene {
     // IF user is pressing/moving right
     if (keyRightPressed.isDown === true) {
       // Moves Blaster Sprite Right (x-axis)
-      this.blasterSprite.x += 5;
+      this.blasterSprite.x += 10;
       // Prevents Blaster from moving off screen
       if (this.blasterSprite.x > 1920) {
         this.blasterSprite.x = 0;
@@ -133,7 +210,7 @@ class gameScene extends Phaser.Scene {
     // IF user is pressing/moving up
     if (keyUpPressed.isDown === true) {
       // Moves Blaster Sprite Up (y-axis)
-      this.blasterSprite.y -= 5;
+      this.blasterSprite.y -= 10;
       // Prevents Sprite from going off Screen
       if (this.blasterSprite.y < 0) {
         this.blasterSprite.y = 1080;
@@ -145,7 +222,7 @@ class gameScene extends Phaser.Scene {
     // IF user is pressing/moving down
     if (keyDownPressed.isDown === true) {
       // Moves Blaster down (y-axis)
-      this.blasterSprite.y += 5;
+      this.blasterSprite.y += 10;
       // Prevents Blaster from going off screen
       if (this.blasterSprite.y > 1080) {
         this.blasterSprite.y = 0;
