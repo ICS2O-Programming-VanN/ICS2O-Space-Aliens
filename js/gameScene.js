@@ -55,7 +55,7 @@ class gameScene extends Phaser.Scene {
     // Initializes Game Over Text variable 
     this.gameOverText = null;
     // Game over text style
-    this.gameOverTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' };
+    this.gameOverTextStyle = { font: '65px Arial', fill: '#00008b', align: 'center' };
 
     // Initializes Health Points variable
     this.healthPoints = 3;
@@ -67,7 +67,7 @@ class gameScene extends Phaser.Scene {
     // Game Win text variable
     this.gameWinText = null
     // Game Win text variable Style
-    this.gameWinTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' }
+    this.gameWinTextStyle = { font: '65px Arial', fill: '#00008b', align: 'center' }
   }
 
 
