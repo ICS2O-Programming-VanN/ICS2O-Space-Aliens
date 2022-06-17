@@ -54,7 +54,7 @@ class InstructionScene extends Phaser.Scene {
     this.instructionSceneBackgroundImage.y = 1080 / 2
   
     // Displays Instruction text
-    this.instructionSceneBodyText = this.add.text(950, 600, `Hey You!\nTake this Blaster that always blasts to the right!\nYou can use Arrow Keys to move upwards, downwards, to the left and to the right!\nYou may also use Spacebar to fire lasers!\nDestroy 50 Robots to win!\n You are given 3 health points, if get hit by a robot you lose a health point.\nIf you lose all of your health points you lose!\n Good Luck and Have Fun!!!\n-Van`, this.instructionSceneTextStyle).setOrigin(0.5).setScale(2)
+    this.instructionSceneBodyText = this.add.text(950, 600, `Hey You!\nTake this Blaster that always blasts to the right!\nYou can use Arrow Keys to move upwards, downwards, to the left and to the right!\nYou may also use Spacebar to fire lasers!\nDestroy 50 Robots to win!\n You are given 3 health points, if get hit by a robot you lose a health point.\nIf you lose all of your health points, you lose!\n Good Luck and Have Fun!!!\n-Van`, this.instructionSceneTextStyle).setOrigin(0.5).setScale(2)
     
     // Displays Back Button
     this.backButton = this.add.sprite(150, 150, 'backButton').setScale(0.4)
