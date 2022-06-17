@@ -10,7 +10,7 @@
 
 // Adds code to Phaser.Scene
 class menuScene extends Phaser.Scene {
-  
+
   
   constructor() {
     // Runs Phaser.Scene
@@ -19,16 +19,14 @@ class menuScene extends Phaser.Scene {
     // Initializes Variable for the background image
     this.menuSceneBackgroundImage = null;
 
+    // Initializes Variable for demand to go to the Game Scene 
+    this.buttonChangeScene = false
+    
     // Initializes Variable for Button
     this.startButton = null;
     
-    this.gameSceneChange = false
-
-    // Initializes Menu Scene text variable
-    this.menuSceneInstructions = null;
-
-    // Initializing a variable to style the text on the Menu Scene
-    this.menuSceneInstructionsStyle = {font: '175px Times', fill: '#00ff99', align: 'center'};
+    // Initializes Variable to activate music
+    this.musicPlaying = false
   }
 
   init(data) {
@@ -47,11 +45,38 @@ class menuScene extends Phaser.Scene {
     // Loads image for button
     this.load.image('start', './images/startButton.png');
 
+    // Loads Instruction Button
+    this.load.image("instructionsButton", "./images/instructionsButton.png")
+    
     // Loads image for button when clicked
     this.load.image('startButtonClicked', './images/startButtonClicked.png');
+
+    // Loads Background music
+    this.load.audio("gameBackgroundMusic", "./sounds/gameBackgroundMusic.mp3")
+
+    // Loads Button Cliked Sound Effect
+    this.load.audio("buttonClicked", "./sounds/buttonClickedSoundEffect.mp3")
   }
 
   create(data) {
+
+    // IF statement that checks if music is already playing so it does not repeat
+    if (this.musicPlaying === false) {
+
+      // Creates Variable for music
+      var music = new Audio("./sounds/gameBackgroundMusic.mp3")
+
+      // Plays the music
+      music.play()
+
+      // Loops the music 
+      music.loop = true
+
+      // Prevents music playing to repeat and overlap
+      this.musicPlaying = true
+    }
+
+    
     // Creates background image
     this.menuSceneBackgroundImage = this.add.sprite(0, 0, 'menuSceneBackground');
     
@@ -60,35 +85,54 @@ class menuScene extends Phaser.Scene {
     this.menuSceneBackgroundImage.y = 1080 / 2;
 
     // Creates image for starting button
-    this.startButton = this.add.sprite(1920 / 5, (1080 / 2) + 300, 'start').setScale(0.8);
+    this.startButton = this.add.sprite(1920 / 5, (1080 / 2) + 300, 'start').setScale(0.7);
+
+    // Displays Instruction Buttons
+    this.instructionsButton = this.add.sprite(1375, 999, "instructionsButton")
+
+
+    
     // Allows user to click button
     this.startButton.setInteractive({useHandCursor: true });
     
     // When the button clicked, call a function
     this.startButton.on('pointerdown', () => this.buttonClicked());
     
-    // Creates Instructions on how to play for Menu Scene
-    this.menuSceneInstructions = this.add.text(1920 / 2, (10 / 2) + 100, 'Arrow Keys to Move!\nSpacebar to shoot lasers!', this.menuSceneInstructionsStyle).setOrigin(0.50).setScale(0.40);
+    //Allows button to be used when pressed 
+    this.instructionsButton.setInteractive({ useHandCursor: true })
+    this.instructionsButton.on("pointerdown", () => this.instructionButton())
+
   }
   
+  // Function when start button is clicked
   buttonClicked() {
+    // Plays Button Clicked Sound Effect
+    this.sound.play("buttonClicked")
+    // Changed Button from Green to Red when Clicked
     this.startButton.setTexture('startButtonClicked')
-    this.scene.start('gameScene');
+    // Game Scene should be now played
+    this.buttonChangeScene = true
   }
 
+  // Function for when instruction Button is clicked
+  instructionButton() {
+    this.sound.play("buttonClicked")
+    // Starts Instruction Scene
+    this.scene.start("instructionScene")
+  }
 
   update(time, delta) {
-    if (this.gameSceneChange == true) {
-      time = 0
-      if (time > 100) {
+    // Checks Game Scene should be played
+    if (this.buttonChangeScene === true) {
+      if (time > 5000) {
+        // Plays Game Scene
         this.scene.start('gameScene');
       }
     }
-   
   }
 }
 
-  // Function when start button is clicked
+  
 
 
 export default menuScene

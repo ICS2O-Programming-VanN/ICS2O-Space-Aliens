@@ -50,7 +50,7 @@ class gameScene extends Phaser.Scene {
     // Initializes Score text variable
     this.scoreText = null;
     // Score text Style
-    this.scoreTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' };
+    this.scoreTextStyle = { font: '65px Arial', fill: '#013220', align: 'center' };
 
     // Initializes Game Over Text variable 
     this.gameOverText = null;
@@ -62,7 +62,7 @@ class gameScene extends Phaser.Scene {
     // Initializes Health Points text variable
     this.healthPointsText = null;
     // Health Points Text Style
-    this.healthPointsTextStyle = { font: '65px Arial', fill: '#00ff99', align: 'center' };
+    this.healthPointsTextStyle = { font: '65px Arial', fill: '#013220', align: 'center' };
 
     // Game Win text variable
     this.gameWinText = null
@@ -87,6 +87,7 @@ class gameScene extends Phaser.Scene {
     // Loads Blaster Sprite
     this.load.image('blasterSprite', './images/blasterSprite.png');
 
+
     // Loads Laser Beam Sprite
     this.load.image('laserSprite', './images/laserBeam.png');
     
@@ -94,13 +95,13 @@ class gameScene extends Phaser.Scene {
     this.load.image('robot', './images/robot.png');
 
     // Loads sound for when the laser beam is fired
-    this.load.audio('laserSound', './sounds/laserFiredSound.wav');
+    this.load.audio('laserSound', './sounds/laserFiredSound.mp3');
 
     // Loads sound for when the Laser hits the robot
     this.load.audio('explosion', './sounds/laserToRobotExplosion.mp3');
 
     // Loads sound for when the robot hits the blaster
-    this.load.audio('enemyCollison', './sounds/enemyCollison.mp3');
+    this.load.audio('enemyCollision', './sounds/healthLostSound.mp3');
   }
 
   create(data) {
@@ -115,7 +116,7 @@ class gameScene extends Phaser.Scene {
     // Displays health points to screen
     this.healthPointsText = this.add.text(650, 10, 'Health Points: ' + this.healthPoints.toString(), this.healthPointsTextStyle);
     
-    // Displays Laser Sprite
+    // Displays Blaster Sprite
     this.blasterSprite = this.physics.add.sprite(100, 1080 / 2, 'blasterSprite').setScale(0.50);
 
     // Groups lasers together to have identical properties
@@ -123,12 +124,14 @@ class gameScene extends Phaser.Scene {
 
     // Creates group for all Robots
     this.robotGroup = this.add.group();
-    // Creates two robots to start off
+    // Creates three robots to start off
+    this.createRobot();
     this.createRobot();
     this.createRobot();
 
     // When the laser hits the robots
     this.physics.add.collider(this.laserGroup, this.robotGroup, function (laserCollide, robotCollide) {
+
       // Destroys the Robot
       robotCollide.destroy();
       
@@ -146,8 +149,8 @@ class gameScene extends Phaser.Scene {
       this.createRobot();
       this.createRobot();
 
-      // If the user gains 25 points / wins
-      if (this.score >= 25) {
+      // If the user gains 50 points / wins
+      if (this.score >= 50) {
         // Stops physics to create more robots
         this.physics.pause()
 
@@ -163,17 +166,35 @@ class gameScene extends Phaser.Scene {
 
     // Physics when the robots collide with the blaster
     this.physics.add.collider(this.blasterSprite, this.robotGroup, function (blasterSpriteCollide, robotCollide) {
-      // Stops Physics from creating more robots
-      this.physics.pause()
+
+      // Plays Collision sound
+      this.sound.play('enemyCollision');
+      
       // Destroys the Robot
       robotCollide.destroy()
-      // Destroys the Blaster
-      blasterSpriteCollide.destroy()
-      // Displays Game Over text and allows user to play the game again by clicking
-      this.gameOverText = this.add.text(1920 / 2, 1080 / 2, "Game Over! \nClick to play again", this.gameOverTextStyle).setOrigin(0.5)
-      this.gameOverText.setInteractive({ useHandCursor: true})
-      this.gameOverText.on("pointerdown", () => this.scene.start("gameScene"))
-      this.score = 0
+
+      
+      // Decreases players health points by 1 every time they get hit
+      this.healthPoints -= 1
+      // Health Points Display text
+      this.healthPointsText.setText('Health Points: ' + this.healthPoints.toString(), this.healthPointsTextStyle)
+      blasterSpriteCollide.body.velocity.x = 0
+
+      // IF the player has no health points left
+      if (this.healthPoints <= 0) {
+        // Stops Physics from creating more robots
+        this.physics.pause()
+        // Destroys Blaster
+        blasterSpriteCollide.destroy()
+        // Displays Game Over text and allows user to play the game again by clicking
+        this.gameOverText = this.add.text(1920 / 2, 1080 / 2, "Game Over! \nClick to play again", this.gameOverTextStyle).setOrigin(0.5)
+        this.gameOverText.setInteractive({ useHandCursor: true})
+        this.gameOverText.on("pointerdown", () => this.scene.start("gameScene"))
+        // Resets Score and Health Points
+        this.score = 0
+        this.healthPoints = 3
+      }
+      // Binds code to class "this" 
     }.bind(this))
 
   }
@@ -185,6 +206,8 @@ class gameScene extends Phaser.Scene {
     
     // IF statement checks if left key is pressed and moves the sprite accordingly
     if (keyLeftPressed.isDown === true) {
+      // Rotates the blaster so it is facing leftwards
+      this.blasterSprite.setAngle(180);
       // Moved lasers left (x-axis)
       this.blasterSprite.x -= 10;
       // Prevents Blaster from going off screen
@@ -197,6 +220,8 @@ class gameScene extends Phaser.Scene {
     const keyRightPressed = this.input.keyboard.addKey('RIGHT');
     // IF user is pressing/moving right
     if (keyRightPressed.isDown === true) {
+      // Rotates Blaster so it is facing forwards (rightwards)
+      this.blasterSprite.setAngle(0);
       // Moves Blaster Sprite Right (x-axis)
       this.blasterSprite.x += 10;
       // Prevents Blaster from moving off screen
@@ -209,6 +234,8 @@ class gameScene extends Phaser.Scene {
     const keyUpPressed = this.input.keyboard.addKey('UP');
     // IF user is pressing/moving up
     if (keyUpPressed.isDown === true) {
+      // Rotates Blaster so it faces upwards
+      this.blasterSprite.setAngle(-90);
       // Moves Blaster Sprite Up (y-axis)
       this.blasterSprite.y -= 10;
       // Prevents Sprite from going off Screen
@@ -221,6 +248,8 @@ class gameScene extends Phaser.Scene {
     const keyDownPressed = this.input.keyboard.addKey('DOWN');
     // IF user is pressing/moving down
     if (keyDownPressed.isDown === true) {
+      // Rotates Blaster so it faces downwards
+      this.blasterSprite.setAngle(90);
       // Moves Blaster down (y-axis)
       this.blasterSprite.y += 10;
       // Prevents Blaster from going off screen
@@ -252,6 +281,15 @@ class gameScene extends Phaser.Scene {
       this.laserSprite = false;
     }
 
+    // This function makes it so that when a robot reachs the end of the screen, it warps back to the other side
+    this.robotGroup.children.each(function (item1) {
+      if ((item1.x < 0) || (item1.y < 0)) {
+        item1.x = 2000
+        let robotYCoord = Math.floor(Math.random() * 1080) + 1
+        item1.y = robotYCoord
+      }
+    })
+    
     // Function to all lasers
     this.laserGroup.children.each(function (item) {
       // Makes it so each laser moves towards the right
