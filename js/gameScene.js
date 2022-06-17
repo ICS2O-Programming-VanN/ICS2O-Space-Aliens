@@ -158,7 +158,10 @@ class gameScene extends Phaser.Scene {
         this.gameWinText = this.add.text(1920 / 2, 1080 / 2, 'You won!\nClick to play again.', this.gameWinTextStyle).setOrigin(0.5)
         // Allows the user to play again by clicking
         this.gameWinText.setInteractive({ useHandCursor: true })
-        this.gameWinText.on('pointerdown', () => this.scene.start('gameScene'), this.score = 0)
+        this.gameWinText.on('pointerdown', () => this.scene.start('gameScene'))
+        // Resets Score and Health Points
+        this.score = 0
+        this.healthPoints = 3
       }
       
       // Binds code the class "this"
