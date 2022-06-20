@@ -94,11 +94,16 @@ class menuScene extends Phaser.Scene {
     
     // Allows user to click button
     this.startButton.setInteractive({useHandCursor: true });
-    
-    // When the button clicked, call a function
+
+    // When the player hovers on the button call function changeColor()
+    this.startButton.on('pointerover', () => this.changeColor());
+
+    // When the player is not hovering on the button call function changeColorBack()
+    this.startButton.on('pointerout', () => this.changeColorBack());
+    // When the button clicked call the Function buttonClicked()
     this.startButton.on('pointerdown', () => this.buttonClicked());
     
-    //Allows button to be used when pressed 
+    // Allows button to be used when pressed 
     this.instructionsButton.setInteractive({ useHandCursor: true })
     this.instructionsButton.on("pointerdown", () => this.instructionButton())
 
@@ -108,28 +113,31 @@ class menuScene extends Phaser.Scene {
   buttonClicked() {
     // Plays Button Clicked Sound Effect
     this.sound.play("buttonClicked")
-    // Changed Button from Green to Red when Clicked
+    // Plays Game Scene
+    this.scene.start('gameScene');
+  }
+
+  // Function for when the player is not hovering on the play button
+  changeColorBack() {
+    // Sets Button Color to Green when not being hovered on
+    this.startButton.setTexture('start')
+  }
+  
+  // Function for when the player is hovering on the play button
+  changeColor() {
+    // Changed Button from Green to Red when Hovered over
     this.startButton.setTexture('startButtonClicked')
-    // Game Scene should be now played
-    this.buttonChangeScene = true
   }
 
   // Function for when instruction Button is clicked
   instructionButton() {
+    // Plays Button Cliked Sound Effect
     this.sound.play("buttonClicked")
     // Starts Instruction Scene
     this.scene.start("instructionScene")
   }
 
-  update(time, delta) {
-    // Checks Game Scene should be played
-    if (this.buttonChangeScene === true) {
-      if (time > 5000) {
-        // Plays Game Scene
-        this.scene.start('gameScene');
-      }
-    }
-  }
+  
 }
 
   

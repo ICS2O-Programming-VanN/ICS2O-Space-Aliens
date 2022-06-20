@@ -102,6 +102,12 @@ class gameScene extends Phaser.Scene {
 
     // Loads sound for when the robot hits the blaster
     this.load.audio('enemyCollision', './sounds/healthLostSound.mp3');
+
+    // Loads sound for when the player wins
+    this.load.audio('winSound', './sounds/winSoundEffect.mp3');
+
+    // Loads sound for when the player loses
+    this.load.audio('loseSound', './sounds/loseSoundEffect.mp3');
   }
 
   create(data) {
@@ -153,7 +159,8 @@ class gameScene extends Phaser.Scene {
       if (this.score >= 50) {
         // Stops physics to create more robots
         this.physics.pause()
-
+        // Plays the Win Sound Effect
+        this.sound.play('winSound');
         // Displays Game win Text
         this.gameWinText = this.add.text(1920 / 2, 1080 / 2, 'You won!\nClick to play again.', this.gameWinTextStyle).setOrigin(0.5)
         // Allows the user to play again by clicking
@@ -189,6 +196,8 @@ class gameScene extends Phaser.Scene {
         this.physics.pause()
         // Destroys Blaster
         blasterSpriteCollide.destroy()
+        // Plays the Lose Sound Effect
+        this.sound.play('loseSound');
         // Displays Game Over text and allows user to play the game again by clicking
         this.gameOverText = this.add.text(1920 / 2, 1080 / 2, "Game Over! \nClick to play again", this.gameOverTextStyle).setOrigin(0.5)
         this.gameOverText.setInteractive({ useHandCursor: true})
